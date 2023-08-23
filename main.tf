@@ -37,6 +37,15 @@ locals {
     secret_gh_private_key = "${module.secrets_manager.secret_arn}"
     iam_excutionrole_arn = "${module.iam_role.batch_job_excution_role_arn}"
   }
+  batch_jobs = {
+    fargate-batch-job-queue = "${module.batch.fargate_batch_job_queue}"
+    ec2-batch-job-queue = "${module.batch.ec2_batch_job_queue}"
+    fargate-batch-job-define = "${module.batch.batch_job_definition.fargate}"
+    ec2-batch-job-define = "${module.batch.batch_job_definition.ec2}"
+  }
+  organization = {
+    org-user-ids = [ "kerashanog", "hungran", "dtanhv1704", "haicasgox", "HieuChayA4", "hiimtung", "lacoski", "lqanh10", "huulc" ]
+  }
 }
 module "batch" {
   source = "./modules/batch"
@@ -45,8 +54,8 @@ module "batch" {
 
   # Batch Compute Environment
   batch_compute_env = local.batch_compute_env
-  compute_security_group = [module.networks.security_group]
-  compute_subnet_ids = module.networks.subnet_ids
+  compute_security_group = [module.security_group.security_group_id]
+  compute_subnet_ids = module.vpc.public_subnets
   compute_service_role = module.iam_role.batch_service_role_arn
 
   ## Batch Job Definition ##
@@ -64,9 +73,42 @@ module "batch" {
   }
 }
 
-module "networks" {
-  source = "./modules/networks"
+# module "networks" {
+#   source = "./modules/networks"
+# }
+data "aws_availability_zones" "available" {
+  state = "available"
 }
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  version = "5.1.0"
+  name = "github-runner-batch"
+  cidr = "10.1.0.0/16"
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+  public_subnets = [ "10.1.1.0/24","10.1.2.0/24","10.1.3.0/24" ]
+  map_public_ip_on_launch = true
+  enable_dhcp_options = true
+  enable_dns_hostnames = true
+  enable_dns_support = true
+
+}
+
+module "security_group" {
+  source   = "terraform-aws-modules/security-group/aws"
+  version  = "4.9.0"
+
+  name        = "batch-jobs-sg"
+  description = "Security group for Batch Jobs"
+  vpc_id      = module.vpc.vpc_id
+  
+  egress_cidr_blocks = ["0.0.0.0/0"]
+  egress_rules       = ["all-all"]
+
+  depends_on = [
+    module.vpc
+  ]
+}
+
 module "secrets_manager" {
   source = "./modules/secrets-manager"  
   secret_values = "./configs/app.pem"
@@ -75,17 +117,7 @@ module "iam_role" {
   source = "./modules/iam"
   secret_resource_arn = module.secrets_manager.secret_arn
 }
-locals {
-  batch_jobs = {
-    fargate-batch-job-queue = "${module.batch.fargate_batch_job_queue}"
-    ec2-batch-job-queue = "${module.batch.ec2_batch_job_queue}"
-    fargate-batch-job-define = "${module.batch.batch_job_definition.fargate}"
-    ec2-batch-job-define = "${module.batch.batch_job_definition.ec2}"
-  }
-  organization = {
-    org-user-ids = [ "kerashanog", "hungran", "dtanhv1704", "haicasgox", "HieuChayA4", "hiimtung", "lacoski", "lqanh10", "huulc" ]
-  }  
-}
+
 module "api_gateway" {
   source = "./modules/api-gateway"
   apigw_excution_role_arn = module.iam_role.api_gateway_excution_role_arn
