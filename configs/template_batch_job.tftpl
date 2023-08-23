@@ -1,0 +1,11 @@
+#set($inputRoot = $input.path('$'))
+{
+  "jobName": "$${inputRoot.sender.login}-$${inputRoot.workflow_job.name}",
+  "jobQueue": "${batch-job-queue}",
+  "jobDefinition": "${batch-job-define}",
+  "tags": {
+    "sender": "$${inputRoot.sender.login}",
+    "repo": "$${inputRoot.repository.full_name}",
+    "workflow_job": "$${inputRoot.workflow_job.name}"
+  }
+}

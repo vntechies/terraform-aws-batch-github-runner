@@ -1,0 +1,22 @@
+#set($inputRoot = $input.path('$'))
+{
+  "jobName": "$${inputRoot.organization.login}-$${inputRoot.sender.login}-$${inputRoot.workflow_job.name.replace(' ','')}",
+  #foreach($elem in $inputRoot.workflow_job.labels)
+    #if($elem == "ec2")
+      "jobQueue": "${ec2-batch-job-queue}",
+      "jobDefinition": "${ec2-batch-job-define}",
+      $foreach.stop()
+    #elseif($elem == "fargate")
+      "jobQueue": "${fargate-batch-job-queue}",
+      "jobDefinition": "${fargate-batch-job-define}",
+      $foreach.stop()
+    #end 
+  #if($foreach.hasNext)#end
+  #end
+  "tags": {
+    "sender": "$${inputRoot.sender.login}",
+    "repo": "$${inputRoot.repository.full_name}",
+    "org": "$${inputRoot.organization.login}",
+    "workflow_job": "$${inputRoot.workflow_job.name}"
+  }
+}

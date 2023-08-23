@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GitHubWebhook",
+  "type": "object",
+  "properties": {
+    "action": { 
+	  "type": "string",
+	  "enum": ["queued"]
+	},
+	"workflow_job": {
+	  "type": "object",
+	  "properties": {
+		"name": {
+		  "type": "string"		  	
+		},
+		"labels": {
+		  "type": "array"		  
+		}
+	  },
+      "required": [ "labels" ]	  
+	},
+	"repository": {
+	  "type": "object",
+	  "properties": {
+		"name": {
+		  "type": "string"		  	
+		},
+		"full_name": {
+		  "type": "string"		  
+		},
+		"private": {
+		  "type": "boolean",
+		  "enum": [ true ]
+		}
+	  }	  
+	},
+	"sender": {
+	  "type": "object",
+	  "properties": {
+		"login": {
+		  "type": "string",
+		  "enum": ["kerashanog", "user2", "user3"]	
+		}
+	  }	  
+	}
+  },
+  "required": [ "action", "workflow_job", "repository", "sender" ]
+}

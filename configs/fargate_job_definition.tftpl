@@ -1,0 +1,26 @@
+{
+    "image": "${container_image}",
+    "fargatePlatformConfiguration": {
+        "platformVersion": "LATEST"
+    },
+    "resourceRequirements": [
+        { "type": "VCPU", "value": "${container_vcpus}" },
+        { "type": "MEMORY", "value": "${container_memory}" }
+    ],
+    "networkConfiguration": {
+        "assignPublicIp": "ENABLED"
+    },
+    "environment": [
+        { "name": "EPHEMERAL", "value": "1" },
+        { "name": "APP_ID", "value": "${gh_app_id}" },
+        { "name": "RUNNER_SCOPE", "value": "org" },
+        { "name": "ORG_NAME", "value": "tnx-journey-to-cloud" },
+        { "name": "RUNNER_WORKDIR", "value": "/tmp/github-runner" },
+        { "name": "RUNNER_NAME_PREFIX", "value": "cj-fargate-runner" },
+        { "name": "LABELS", "value": "cj-runner,fargate-runner,fargate" }
+    ],
+    "secrets": [
+        { "name": "APP_PRIVATE_KEY", "valueFrom": "${secret_gh_private_key}" }
+    ],
+    "executionRoleArn": "${iam_excutionrole_arn}"
+}

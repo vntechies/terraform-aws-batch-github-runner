@@ -1,0 +1,28 @@
+{
+    "image": "${container_image}",
+    "resourceRequirements": [
+        { "type": "VCPU", "value": "${container_vcpus}" },
+        { "type": "MEMORY", "value": "${container_memory}" }
+    ],
+    "volumes": [
+        { "host": {"sourcePath": "/var/run/docker.sock"}, "name": "dockersock" },
+        { "host": {"sourcePath": "/tmp/github-runner"}, "name": "jobs"  }
+    ],
+    "mountPoints": [
+        { "sourceVolume": "dockersock", "containerPath": "/var/run/docker.sock", "readOnly": false },
+        { "sourceVolume": "jobs", "containerPath": "/tmp/github-runner", "readOnly": false }
+    ],
+    "environment": [
+        { "name": "EPHEMERAL", "value": "1" },
+        { "name": "APP_ID", "value": "${gh_app_id}" },
+        { "name": "RUNNER_SCOPE", "value": "org" },
+        { "name": "ORG_NAME", "value": "tnx-journey-to-cloud" },
+        { "name": "RUNNER_WORKDIR", "value": "/tmp/github-runner" },
+        { "name": "RUNNER_NAME_PREFIX", "value": "cj-ec2-runner" },
+        { "name": "LABELS", "value": "cj-runner,ec2-runner,ec2" }
+    ],
+    "secrets": [
+        { "name": "APP_PRIVATE_KEY", "valueFrom": "${secret_gh_private_key}" }
+    ],
+    "executionRoleArn": "${iam_excutionrole_arn}"
+}
