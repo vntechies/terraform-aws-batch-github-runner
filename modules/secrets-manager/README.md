@@ -33,6 +33,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_secret_arn"></a> [secret\_arn](#output\_secret\_arn) | n/a |
-| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | n/a |
+| <a name="output_secret_arn"></a> [secret\_arn](#output\_secret\_arn) | ARN of Secret store in secret manager |
+| <a name="output_secret_id"></a> [secret\_id](#output\_secret\_id) | ID of Secret store in secret manager |
 <!-- END_TF_DOCS -->

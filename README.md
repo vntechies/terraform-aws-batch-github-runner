@@ -127,9 +127,9 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_api_gateway_invoke_url"></a> [api\_gateway\_invoke\_url](#output\_api\_gateway\_invoke\_url) | n/a |
-| <a name="output_batch_job_definition"></a> [batch\_job\_definition](#output\_batch\_job\_definition) | n/a |
-| <a name="output_ec2_batch_job_queue"></a> [ec2\_batch\_job\_queue](#output\_ec2\_batch\_job\_queue) | n/a |
-| <a name="output_fargate_batch_job_queue"></a> [fargate\_batch\_job\_queue](#output\_fargate\_batch\_job\_queue) | n/a |
-| <a name="output_secret_app_key"></a> [secret\_app\_key](#output\_secret\_app\_key) | n/a |
+| <a name="output_api_gateway_invoke_url"></a> [api\_gateway\_invoke\_url](#output\_api\_gateway\_invoke\_url) | URL of API Gateway Webhook, use to set in GitHub App webhook |
+| <a name="output_batch_job_definition"></a> [batch\_job\_definition](#output\_batch\_job\_definition) | A set of AWS Batch job definiton |
+| <a name="output_ec2_batch_job_queue"></a> [ec2\_batch\_job\_queue](#output\_ec2\_batch\_job\_queue) | Set of EC2 batch job queue |
+| <a name="output_fargate_batch_job_queue"></a> [fargate\_batch\_job\_queue](#output\_fargate\_batch\_job\_queue) | Set of fargate batch job queue |
+| <a name="output_secret_app_key"></a> [secret\_app\_key](#output\_secret\_app\_key) | ARN of the GitHub App Private key stored in Secret Manager |
 <!-- END_TF_DOCS -->
