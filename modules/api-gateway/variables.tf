@@ -2,7 +2,7 @@ variable "default_tags" {
   description = "(Required) Default tag for AWS resource"
   default = {
     env         = "dev"
-    project     = "github-runner-batch"
+    project     = "terraform-aws-batch-github-runner"
     github_repo = ""
     component   = "api-gateway"
   }
@@ -16,4 +16,13 @@ variable "model_json_schema" {
 }
 variable "integration_mapping_model" {
   type = string  
+}
+variable "region" {
+  type = string
+}
+variable "api_gateway_stage_name" {
+  type = string
+}
+variable "api_gateway_path" {
+  type = string
 }

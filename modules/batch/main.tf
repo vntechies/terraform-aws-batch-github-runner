@@ -1,4 +1,10 @@
-###################  New AWS Batch Compute ENV ################### 
+provider "aws" {
+  default_tags {
+    tags = var.default_tags
+  }
+}
+
+###################  New AWS Batch Compute Env ################### 
 resource "aws_batch_compute_environment" "this" {
   for_each = var.batch_compute_env
   compute_environment_name = "${each.key}-${var.batch_name_prefix}"

@@ -1,6 +1,10 @@
+provider "aws" {
+  default_tags {
+    tags = var.default_tags
+  }
+}
 
 ## AWS Batch - Compute Service Role ##
-
 resource "aws_iam_role" "batch_compute_service_role" {
   name = "githubBatchComputeServiceRole"
 

@@ -24,7 +24,7 @@
 	  "properties": {
           "login": {
             "type": "string",	
-            "enum": [ "tnx-journey-to-cloud" ]
+            "enum": [ "${org_id}" ]
           }
 	  },
     "required": [ "login" ]	  
@@ -49,7 +49,7 @@
 	  "properties": {
           "login": {
             "type": "string",
-            "enum": ${jsonencode([for user-id in org-user-ids : "${user-id}"])}
+            "enum": ${jsonencode([for user_id in org_user_ids : "${user_id}"])}
           }
 	  }	  
 	}

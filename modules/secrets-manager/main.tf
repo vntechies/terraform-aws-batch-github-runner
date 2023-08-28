@@ -1,7 +1,13 @@
+provider "aws" {
+  default_tags {
+    tags = var.default_tags
+  }
+}
+
 resource "aws_secretsmanager_secret" "github_app" {
-  name = "github/org/app-private-key"
+  name = var.secret_name
   description = "Github App Private Key"
-  recovery_window_in_days = 0
+  recovery_window_in_days = var.recovery_window_in_days
 }
 
 resource "aws_secretsmanager_secret_version" "secret" {

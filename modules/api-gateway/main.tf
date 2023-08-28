@@ -1,3 +1,9 @@
+provider "aws" {
+  default_tags {
+    tags = var.default_tags
+  }
+}
+
 locals {
   api_invoke_url = "${aws_api_gateway_stage.stage.invoke_url}${aws_api_gateway_resource.webhook.path}"
 }
@@ -16,7 +22,7 @@ resource "aws_api_gateway_rest_api" "github_batch" {
 resource "aws_api_gateway_resource" "webhook" {
   rest_api_id = aws_api_gateway_rest_api.github_batch.id
   parent_id = aws_api_gateway_rest_api.github_batch.root_resource_id
-  path_part = "webhook"
+  path_part = var.api_gateway_path
   depends_on = [
     var.apigw_excution_role_arn,
     var.model_json_schema,
@@ -53,7 +59,7 @@ resource "aws_api_gateway_integration" "api_to_batch" {
   rest_api_id = aws_api_gateway_rest_api.github_batch.id
   integration_http_method = "POST"
   type = "AWS"
-  uri = "arn:aws:apigateway:ap-southeast-1:batch:path/v1/submitjob"
+  uri = "arn:aws:apigateway:${var.region}:batch:path/v1/submitjob"
   credentials = var.apigw_excution_role_arn
   request_templates = {
     "application/json" = try(var.integration_mapping_model, "")
@@ -87,11 +93,6 @@ resource "aws_api_gateway_method_response" "response" {
   resource_id = aws_api_gateway_resource.webhook.id
   http_method = aws_api_gateway_method.post.http_method
   status_code = "200"
-  # depends_on = [
-  #   aws_api_gateway_rest_api.github_batch,
-  #   aws_api_gateway_resource.webhook,
-  #   aws_api_gateway_method.post
-  # ]
 }
 
 resource "aws_api_gateway_integration_response" "batch_response_apigw" {
@@ -128,7 +129,7 @@ resource "aws_api_gateway_deployment" "deploy" {
 resource "aws_api_gateway_stage" "stage" {
   deployment_id = aws_api_gateway_deployment.deploy.id
   rest_api_id = aws_api_gateway_rest_api.github_batch.id
-  stage_name = "v1"
+  stage_name = var.api_gateway_stage_name
   depends_on = [
     aws_api_gateway_deployment.deploy
   ]
