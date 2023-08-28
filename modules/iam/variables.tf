@@ -9,5 +9,6 @@ variable "default_tags" {
 }
 
 variable "secret_resource_arn" {
+  description = "ARN of GitHub App Private Key stored in Secret Manager"
   type = string
 }
