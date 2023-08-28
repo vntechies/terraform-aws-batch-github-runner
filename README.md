@@ -1,13 +1,13 @@
-# aws-batch-github-actions-runner
-AWS Batch for self hosted GitHub action runners.
+# terraform-aws-batch-github-runner
+Terraform module for self hosted GitHub action runners on AWS Batch.
 
-This project will use Docker Image from repo [github.com/myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner). Credit to [Marc](https://github.com/myoung34) for his amazing work.
+This project will use Docker image from repo [github.com/myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner). Credit to [Marc](https://github.com/myoung34) for his amazing work.
 
 ![AWS Batch Github Runner](/assets/aws-batch-gh-runner-diagram.PNG "AWS Batch Github Runner Diagram")
 
 ## How to setup
 
-### 1. Setup GitHub App ###
+### Step 1. Setup GitHub App ###
 
 Go to GitHub and [create a new app](https://docs.github.com/en/developers/apps/creating-a-github-app). Beware you can create apps your organization or for a user.
 
@@ -28,9 +28,9 @@ Go to GitHub and [create a new app](https://docs.github.com/en/developers/apps/c
      - `Self-hosted runners`: Read & write (to register runner)
 8. Save the new app.
 9. On the General page, make a note of the "App ID" parameters.
-10. Generate a new private key and save the `app.pem` file to `configs` folder.
+10. Generate a new private key and save the `app.pem` file into `configs` folder.
 
-### 2. Local test with Docker ###
+### Step 2. Local test with Docker ###
 
 For more environment option / Usage, please visit [github.com/myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner) or [github.com/myoung34/docker-github-actions-runner/wiki](https://github.com/myoung34/docker-github-actions-runner/wiki/Usage)
 
@@ -44,7 +44,7 @@ docker run -d --restart always --name github-runner \
   -e REPO_URL="https://github.com/<your-username>/<your-repo>" \
   -e RUNNER_NAME_PREFIX="github-runner" \
   -e LABELS="label-1,label-2" \
-myoung34/github-runner:latest
+     myoung34/github-runner:latest
 ```
 
 ### Use with Github App in Org level, Ephemeral runner ###
@@ -58,20 +58,28 @@ docker run -d --restart always --name github-runner \
   -e ORG_NAME="<your-org-name>" \
   -e RUNNER_NAME_PREFIX="github-runner" \
   -e LABELS="my-label,other-label" \
-  myoung34/github-runner:latest
+     myoung34/github-runner:latest
   ```
-### 4. Edit config ###
-Change/Review all file in configs folder to match with your parameters.
+### Step 3. Edit config ###
+Change/Review all file in `configs` folder to match with your parameters.
 
 In main.tf update necessary parameters in `locals` to fit with your needs.
-  - `region = "ap-southeast-1"`   AWS Region
-  - `org_id = "your-org-id"`      Your Org ID
-  - `org_user_ids = ["user1", "user2"]`     List of user-id approved to run this runner
-  - `github_app_id = "2xxxxx8"`     Github App ID in `step 1`
+  - `region = "ap-southeast-1"`   _AWS Region_
+  - `org_id = "your-org-id"`      _Your Organization ID_
+  - `org_user_ids = ["user1", "user2"]`     _List of user-id in Organization approved to run this runner_
+  - `github_app_id = "2xxxxx8"`     _Github App ID in `Step 1`_
 
-### 5. Run `terraform init` && `terraform plan` && `terraform apply --auto-approve`
-### 6. Set Webhook to Github App ###
-Use API Gateway URL from `Step 5` Output and Set it in `Webhook URL` of your Github App in `Step 1`. Don't forget tick on `Active`
+### Step 4. Run terraform by using the following commands
+```bash
+$ terraform init
+$ terraform plan
+$ terraform apply --auto-approve
+```
+The terraform output displays the API Gateway URL (webhook), which you need in the next step.
+
+### Step 5. Set Webhook to Github App ###
+  - Use API Gateway URL from `Step 4` Output and Set it in `Webhook URL` of your Github App in `Step 1`. Don't forget tick on `Active`
+  - In the "Install App" section, install the App in your organization, either in all or in selected repositories.
 
 ## Use in workflow
 - If you set `ec2` in `runs-on` parameter of your workflow, job will run on container in EC2 instance.
@@ -86,7 +94,8 @@ jobs:
   render-docs:
     runs-on: [self-hosted, fargate]
 ```
-
+***
+_Many thanks to [philips-labs/terraform-aws-github-runner](https://github.com/philips-labs/terraform-aws-github-runner) and [myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner)_
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
