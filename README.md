@@ -1,7 +1,7 @@
 # aws-batch-github-actions-runner
 AWS Batch for self hosted GitHub action runners.
 
-We will use Docker Image from repo [github.com/myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner). Credit to [Marc](https://github.com/myoung34) for his amazing work.
+This project will use Docker Image from repo [github.com/myoung34/docker-github-actions-runner](https://github.com/myoung34/docker-github-actions-runner). Credit to [Marc](https://github.com/myoung34) for his amazing work.
 
 ![AWS Batch Github Runner](/assets/aws-batch-gh-runner-diagram.PNG "AWS Batch Github Runner Diagram")
 
