@@ -1,9 +1,3 @@
-provider "aws" {
-  default_tags {
-    tags = var.default_tags
-  }
-}
-
 ###################  New AWS Batch Compute Env ################### 
 resource "aws_batch_compute_environment" "this" {
   for_each = var.batch_compute_env
@@ -29,6 +23,7 @@ resource "aws_batch_compute_environment" "this" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.default_tags
   depends_on = [
     var.compute_security_group,
     var.compute_subnet_ids,
@@ -51,6 +46,7 @@ resource "aws_batch_job_definition" "self_hosted_runner" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.default_tags
   depends_on = [
     var.batch_job_definition,
     aws_batch_compute_environment.this
@@ -68,6 +64,7 @@ resource "aws_batch_job_queue" "ec2" {
   state = "ENABLED"
   priority = 1
   compute_environments = local.ec2_env
+  tags = var.default_tags
   depends_on = [
     aws_batch_compute_environment.this,
     local.ec2_env
@@ -82,6 +79,7 @@ resource "aws_batch_job_queue" "fargate" {
   state = "ENABLED"
   priority = 1
   compute_environments = local.fargate_env
+  tags = var.default_tags
   depends_on = [
     aws_batch_compute_environment.this,
     local.fargate_env

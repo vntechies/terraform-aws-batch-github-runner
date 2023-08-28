@@ -1,9 +1,3 @@
-provider "aws" {
-  default_tags {
-    tags = var.default_tags
-  }
-}
-
 locals {
   api_invoke_url = "${aws_api_gateway_stage.stage.invoke_url}${aws_api_gateway_resource.webhook.path}"
 }
@@ -18,6 +12,7 @@ resource "aws_api_gateway_rest_api" "github_batch" {
     var.model_json_schema,
     var.integration_mapping_model
   ] 
+  tags = var.default_tags
 }
 resource "aws_api_gateway_resource" "webhook" {
   rest_api_id = aws_api_gateway_rest_api.github_batch.id
@@ -133,4 +128,5 @@ resource "aws_api_gateway_stage" "stage" {
   depends_on = [
     aws_api_gateway_deployment.deploy
   ]
+  tags = var.default_tags
 }

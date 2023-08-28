@@ -1,9 +1,3 @@
-provider "aws" {
-  default_tags {
-    tags = var.default_tags
-  }
-}
-
 ## AWS Batch - Compute Service Role ##
 resource "aws_iam_role" "batch_compute_service_role" {
   name = "githubBatchComputeServiceRole"
@@ -28,6 +22,7 @@ resource "aws_iam_role" "batch_compute_service_role" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.default_tags
 }
 
 data "aws_iam_policy" "batch_service_link_role" {
@@ -63,6 +58,7 @@ resource "aws_iam_role" "job_def_excution_role" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.default_tags
 }
 
 data "aws_iam_policy_document" "read_secret_resource" {
@@ -109,6 +105,7 @@ resource "aws_iam_role" "api_gateway_excution_role" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = var.default_tags
 }
 
 data "aws_iam_policy_document" "apigw_submit_batch_jobs" {
@@ -140,6 +137,7 @@ resource "aws_iam_role" "ecs_instance_role" {
         ]
     }
   EOF
+  tags = var.default_tags
 }
 
 data "aws_iam_policy" "ecs_instance_role" {
@@ -149,4 +147,5 @@ data "aws_iam_policy" "ecs_instance_role" {
 resource "aws_iam_instance_profile" "ecs_instance_profile" {
   name = aws_iam_role.ecs_instance_role.name
   role = aws_iam_role.ecs_instance_role.name
+  tags = var.default_tags
 }
