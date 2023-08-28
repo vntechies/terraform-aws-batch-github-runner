@@ -15,7 +15,7 @@ variable "model_json_schema" {
   type = any
 }
 variable "integration_mapping_model" {
-  type = string  
+  type = string
 }
 variable "region" {
   type = string

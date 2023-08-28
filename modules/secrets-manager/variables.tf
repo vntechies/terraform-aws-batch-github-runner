@@ -8,7 +8,7 @@ variable "default_tags" {
   }
 }
 variable "secret_values" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -17,6 +17,6 @@ variable "secret_name" {
 }
 
 variable "recovery_window_in_days" {
-  type = number
+  type    = number
   default = 0
 }

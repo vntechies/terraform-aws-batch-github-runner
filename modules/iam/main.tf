@@ -2,9 +2,9 @@
 resource "aws_iam_role" "batch_compute_service_role" {
   name = "githubBatchComputeServiceRole"
 
-  managed_policy_arns = [ data.aws_iam_policy.batch_service_link_role.arn ]
+  managed_policy_arns   = [data.aws_iam_policy.batch_service_link_role.arn]
   force_detach_policies = true
-  assume_role_policy = <<EOF
+  assume_role_policy    = <<EOF
     {
       "Version": "2012-10-17",
       "Statement": [
@@ -34,9 +34,9 @@ data "aws_iam_policy" "batch_service_link_role" {
 resource "aws_iam_role" "job_def_excution_role" {
   name = "githubBatchJobExcutionRole"
 
-  managed_policy_arns = [ data.aws_iam_policy.ecs_task_excution_role_managed.arn ]
+  managed_policy_arns   = [data.aws_iam_policy.ecs_task_excution_role_managed.arn]
   force_detach_policies = true
-  assume_role_policy = <<EOF
+  assume_role_policy    = <<EOF
     {
       "Version": "2012-10-17",
       "Statement": [
@@ -52,7 +52,7 @@ resource "aws_iam_role" "job_def_excution_role" {
   EOF
 
   inline_policy {
-    name = "ReadSecretGithubApp"
+    name   = "ReadSecretGithubApp"
     policy = data.aws_iam_policy_document.read_secret_resource.json
   }
   lifecycle {
@@ -63,16 +63,16 @@ resource "aws_iam_role" "job_def_excution_role" {
 
 data "aws_iam_policy_document" "read_secret_resource" {
   statement {
-    sid = "readSecretResource"
+    sid    = "readSecretResource"
     effect = "Allow"
     actions = [
       "secretsmanager:GetSecretValue",
     ]
-    resources = [ "${var.secret_resource_arn}" ]
+    resources = ["${var.secret_resource_arn}"]
   }
   depends_on = [
     var.secret_resource_arn
-  ]  
+  ]
 }
 
 data "aws_iam_policy" "ecs_task_excution_role_managed" {
@@ -99,7 +99,7 @@ resource "aws_iam_role" "api_gateway_excution_role" {
   EOF
 
   inline_policy {
-    name = "SubmitBatchJobs"
+    name   = "SubmitBatchJobs"
     policy = data.aws_iam_policy_document.apigw_submit_batch_jobs.json
   }
   lifecycle {
@@ -110,20 +110,20 @@ resource "aws_iam_role" "api_gateway_excution_role" {
 
 data "aws_iam_policy_document" "apigw_submit_batch_jobs" {
   statement {
-    sid = "SubmitBatchJobs"
+    sid    = "SubmitBatchJobs"
     effect = "Allow"
     actions = [
       "batch:SubmitJob",
       "batch:TagResource",
     ]
-    resources = [ "*" ]
+    resources = ["*"]
   }
 }
 ### AWS Batch - ECS EC2 Instance Role ###
 resource "aws_iam_role" "ecs_instance_role" {
-  name = "github_ecs_instance_role"
-  managed_policy_arns = [ data.aws_iam_policy.ecs_instance_role.arn ]
-  assume_role_policy = <<EOF
+  name                = "github_ecs_instance_role"
+  managed_policy_arns = [data.aws_iam_policy.ecs_instance_role.arn]
+  assume_role_policy  = <<EOF
     {
         "Version": "2012-10-17",
         "Statement": [
@@ -137,7 +137,7 @@ resource "aws_iam_role" "ecs_instance_role" {
         ]
     }
   EOF
-  tags = var.default_tags
+  tags                = var.default_tags
 }
 
 data "aws_iam_policy" "ecs_instance_role" {
